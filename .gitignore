@@ -1,3 +1,10 @@
+node_modules/
+dist/
+build/
+.env
+.DS_Store
+coverage/
+data/
 # Logs
 logs
 *.log
