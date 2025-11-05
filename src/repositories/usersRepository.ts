@@ -5,11 +5,11 @@ import { readUsers, writeUsers } from '../storage/fileDb';
 
 export class UsersRepository {
   async getAll(): Promise<User[]> {
-    throw new NotImplemented();
+    return await readUsers();
   }
 
   async getById(id: string): Promise<User | null> {
-    throw new NotImplemented();
+    return await readUsers().then((users) => users.find((user) => user.id === id) || null);
   }
 
   async create(dto: CreateUserDTO): Promise<User> {
