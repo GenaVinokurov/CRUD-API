@@ -1,5 +1,5 @@
 import { User, CreateUserDTO, UpdateUserDTO } from '../models/User';
-import { NotImplemented } from '../errors/httpErrors';
+import { NotFound, NotImplemented } from '../errors/httpErrors';
 import { v4 as uuidv4 } from 'uuid';
 import { readUsers, writeUsers } from '../storage/fileDb';
 
@@ -23,11 +23,26 @@ export class UsersRepository {
     return user;
   }
 
-  async update(id: string, dto: UpdateUserDTO): Promise<User | null> {
-    throw new NotImplemented();
+  async update(id: string, dto: UpdateUserDTO): Promise<User> {
+    const users = await readUsers();
+    const user = users.find((user) => user.id === id);
+    if (!user) {
+      throw new NotFound('User not found');
+    }
+    user.username = dto.username;
+    user.age = dto.age;
+    user.hobbies = dto.hobbies;
+    await writeUsers(users);
+    return user;
   }
 
   async remove(id: string): Promise<boolean> {
-    throw new NotImplemented();
+    const users = await readUsers();
+    const user = users.find((user) => user.id === id);
+    if (!user) {
+      throw new NotFound('User not found');
+    }
+    await writeUsers(users.filter((user) => user.id !== id));
+    return true;
   }
 }
